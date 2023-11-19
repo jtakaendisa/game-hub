@@ -21,9 +21,9 @@ const GameGrid = ({ gameQuery }: Props) => {
           sm: 1,
           md: 2,
           lg: 3,
-          xl: 5,
+          xl: 4,
         }}
-        spacing="0.75rem"
+        spacing="1.5rem"
         padding="0.625rem"
       >
         {isLoading
