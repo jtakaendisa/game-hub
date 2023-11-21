@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query';
+import { QueryFunctionContext, QueryKey, useInfiniteQuery } from 'react-query';
 import { GameQuery } from '../App';
 import APIClient, { FetchResponse } from '../services/api-client';
 import { Genre } from './useGenres';
@@ -16,18 +16,40 @@ export interface Game {
 
 const apiClient = new APIClient<Game>('/games');
 
-const useGames = (gameQuery: GameQuery) =>
-  useQuery<FetchResponse<Game>, Error>({
+const useGames = (gameQuery: GameQuery) => {
+  const fetchData = ({ pageParam = 1 }: QueryFunctionContext<QueryKey, any>) =>
+    apiClient.getAll({
+      params: {
+        genres: gameQuery.genre?.id,
+        parent_platforms: gameQuery.platform?.id,
+        ordering: gameQuery.sortOrder,
+        search: gameQuery.searchText,
+        page: pageParam,
+      },
+    });
+
+  return useInfiniteQuery<FetchResponse<Game>, Error>({
     queryKey: ['games', gameQuery],
-    queryFn: () =>
-      apiClient.getAll({
-        params: {
-          genres: gameQuery.genre?.id,
-          parent_platforms: gameQuery.platform?.id,
-          ordering: gameQuery.sortOrder,
-          search: gameQuery.searchText,
-        },
-      }),
+    queryFn: fetchData,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.next ? allPages.length + 1 : undefined;
+    },
+    refetchOnWindowFocus: false,
   });
+};
 
 export default useGames;
+
+// const useGames = (gameQuery: GameQuery) =>
+//   useQuery<FetchResponse<Game>, Error>({
+//     queryKey: ['games', gameQuery],
+//     queryFn: () =>
+//       apiClient.getAll({
+//         params: {
+//           genres: gameQuery.genre?.id,
+//           parent_platforms: gameQuery.platform?.id,
+//           ordering: gameQuery.sortOrder,
+//           search: gameQuery.searchText,
+//         },
+//       }),
+//   });
