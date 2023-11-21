@@ -1,3 +1,4 @@
+import ms from 'ms';
 import { useQuery } from 'react-query';
 import platforms from '../data/platforms';
 import APIClient, { FetchResponse } from '../services/api-client';
@@ -14,7 +15,7 @@ const usePlatforms = () =>
   useQuery<FetchResponse<Platform>, Error>({
     queryKey: ['platforms'],
     queryFn: apiClient.getAll,
-    staleTime: 24 * 60 * 60 * 1000, //24hrs
+    staleTime: ms('24h'),
     initialData: platforms,
   });
 

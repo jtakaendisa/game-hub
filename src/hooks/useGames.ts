@@ -1,3 +1,4 @@
+import ms from 'ms';
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from 'react-query';
 import { GameQuery } from '../App';
 import APIClient, { FetchResponse } from '../services/api-client';
@@ -35,7 +36,7 @@ const useGames = (gameQuery: GameQuery) => {
       return lastPage.next ? allPages.length + 1 : undefined;
     },
     refetchOnWindowFocus: false,
-    staleTime: 24 * 60 * 60 * 1000, //24hrs
+    staleTime: ms('24h'),
   });
 };
 
