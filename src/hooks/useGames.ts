@@ -1,21 +1,8 @@
 import ms from 'ms';
 import { QueryFunctionContext, QueryKey, useInfiniteQuery } from 'react-query';
 import APIClient, { FetchResponse } from '../services/api-client';
-import { Genre } from './useGenres';
-import { Platform } from './usePlatforms';
 import useGameQueryStore from '../store';
-
-export interface Game {
-  id: number;
-  name: string;
-  background_image: string;
-  description_raw: string;
-  slug: string;
-  parent_platforms: { platform: Platform }[];
-  metacritic: number;
-  genres: Genre[];
-  rating_top: number;
-}
+import { Game } from '../entities/Game';
 
 const apiClient = new APIClient<Game>('/games');
 
